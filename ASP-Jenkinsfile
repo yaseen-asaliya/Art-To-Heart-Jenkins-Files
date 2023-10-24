@@ -1,0 +1,41 @@
+pipeline {
+    agent any
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                // Check out your source code from your repository
+                checkout scm
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                // Build your .NET application
+                sh 'dotnet build'
+            }
+        }
+        
+        stage('Run') {
+            steps {
+                // Run your .NET application
+                sh 'dotnet run'
+            }
+        }
+    }
+    
+    post {
+        success {
+            // If the build and run were successful, send a success email
+            emailext subject: 'Successful Build and Run',
+                body: 'Your .NET application build and run were successful.',
+                to: 'yaseen.asaliya22@gmail.com'
+        }
+        failure {
+            // If the build or run failed, send a failure email
+            emailext subject: 'Failed Build or Run',
+                body: 'Your .NET application build or run failed.',
+                to: 'yaseen.asaliya22@gmail.com'
+        }
+    }
+}
